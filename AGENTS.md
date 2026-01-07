@@ -4,9 +4,9 @@ This file provides coding guidance for AI agents (including Claude Code, Codex, 
 
 ## Overview
 
-This is an **opencode plugin** that enables OAuth authentication with OpenAI's ChatGPT Plus/Pro Codex backend. It allows users to access `gpt-5.2-codex`, `gpt-5.1-codex`, `gpt-5.1-codex-max`, `gpt-5.1-codex-mini`, `gpt-5.2`, and `gpt-5.1` models through their ChatGPT subscription instead of using OpenAI Platform API credits. Legacy GPT-5.0 models are automatically normalized to their GPT-5.1 equivalents.
+This is an **claw plugin** that enables OAuth authentication with OpenAI's ChatGPT Plus/Pro Codex backend. It allows users to access `gpt-5.2-codex`, `gpt-5.1-codex`, `gpt-5.1-codex-max`, `gpt-5.1-codex-mini`, `gpt-5.2`, and `gpt-5.1` models through their ChatGPT subscription instead of using OpenAI Platform API credits. Legacy GPT-5.0 models are automatically normalized to their GPT-5.1 equivalents.
 
-**Key architecture principle**: 7-step fetch flow that intercepts opencode's OpenAI SDK requests, transforms them for the ChatGPT backend API, and handles OAuth token management.
+**Key architecture principle**: 7-step fetch flow that intercepts claw's OpenAI SDK requests, transforms them for the ChatGPT backend API, and handles OAuth token management.
 
 ## Build & Test Commands
 
@@ -45,7 +45,7 @@ The main entry point orchestrates a **7-step fetch flow**:
    - Inject Codex system instructions from latest GitHub release
    - Apply reasoning configuration (effort, summary, verbosity)
    - Add CODEX_MODE bridge prompt (default) or tool remap message (legacy)
-   - Filter OpenCode system prompts when in CODEX_MODE
+   - Filter Claw system prompts when in CODEX_MODE
    - Filter conversation history (remove `rs_*` IDs for stateless operation)
 4. **Headers**: Add OAuth token + ChatGPT account ID
 5. **Request Execution**: Send to Codex backend
@@ -71,7 +71,7 @@ The main entry point orchestrates a **7-step fetch flow**:
 
 **Prompts** (`lib/prompts/`)
 - `codex.ts`: Fetches Codex instructions from GitHub (ETag-cached), tool remap message
-- `codex-opencode-bridge.ts`: CODEX_MODE bridge prompt for CLI parity
+- `codex-claw-bridge.ts`: CODEX_MODE bridge prompt for CLI parity
 
 **Configuration** (`lib/`)
 - `config.ts`: Plugin config loading, CODEX_MODE determination
@@ -86,11 +86,11 @@ The main entry point orchestrates a **7-step fetch flow**:
 - Encrypted reasoning content persists context across turns
 
 **2. CODEX_MODE** (enabled by default):
-- **Priority**: `CODEX_MODE` env var > `~/.opencode/openai-codex-auth-config.json` > default (true)
-- When enabled: Filters out OpenCode system prompts, adds Codex-OpenCode bridge prompt with Task tool & MCP awareness
+- **Priority**: `CODEX_MODE` env var > `~/.claw/openai-codex-auth-config.json` > default (true)
+- When enabled: Filters out Claw system prompts, adds Codex-Claw bridge prompt with Task tool & MCP awareness
 - When disabled: Uses legacy tool remap message
 - Bridge prompt (~550 tokens): Tool mappings, available tools, working style, **Task tool/sub-agent awareness**, **MCP tool awareness**
-- **Prompt verification**: Caches OpenCode's codex.txt from GitHub (ETag-based) to verify exact prompt removal, with fallback to text signature matching
+- **Prompt verification**: Caches Claw's codex.txt from GitHub (ETag-based) to verify exact prompt removal, with fallback to text signature matching
 
 **3. Configuration Merging**:
 - Global options (`provider.openai.options`) + per-model options (`provider.openai.models[name].options`)
@@ -138,9 +138,9 @@ The main entry point orchestrates a **7-step fetch flow**:
 ### Modifying Request Transformation
 
 All request transformations go through `transformRequestBody()`:
-- Input filtering: `filterInput()`, `filterOpenCodeSystemPrompts()`
+- Input filtering: `filterInput()`, `filterClawSystemPrompts()`
 - Message injection: `addCodexBridgeMessage()` or `addToolRemapMessage()`
-- Reasoning config: `getReasoningConfig()` (follows Codex CLI defaults, not opencode defaults)
+- Reasoning config: `getReasoningConfig()` (follows Codex CLI defaults, not claw defaults)
 - Model config: `getModelConfig()` (merges global + per-model options)
 
 ### OAuth Flow Modifications
@@ -160,26 +160,26 @@ OAuth implementation follows OpenAI Codex CLI patterns:
 
 ## Important Configuration Differences
 
-This plugin **intentionally differs from opencode defaults** because it accesses ChatGPT backend API (not OpenAI Platform API):
+This plugin **intentionally differs from claw defaults** because it accesses ChatGPT backend API (not OpenAI Platform API):
 
-| Setting | opencode Default | This Plugin Default | Reason |
+| Setting | claw Default | This Plugin Default | Reason |
 |---------|-----------------|---------------------|--------|
 | `reasoningEffort` | "high" (gpt-5) | "medium" (Codex Max defaults to "high") | Matches Codex CLI default and Codex Max capabilities |
 | `textVerbosity` | "low" (gpt-5) | "medium" | Matches Codex CLI default |
 | `reasoningSummary` | "detailed" | "auto" | Matches Codex CLI default |
-| gpt-5-codex config | (excluded) | Full support | opencode excludes gpt-5-codex from auto-config |
+| gpt-5-codex config | (excluded) | Full support | claw excludes gpt-5-codex from auto-config |
 | `store` | true | false | Required for ChatGPT backend |
 | `include` | (not set) | `["reasoning.encrypted_content"]` | Required for stateless operation |
 
 ## File Paths & Locations
 
-- **Plugin config**: `~/.opencode/openai-codex-auth-config.json`
-- **Cache dir**: `~/.opencode/cache/`
+- **Plugin config**: `~/.claw/openai-codex-auth-config.json`
+- **Cache dir**: `~/.claw/cache/`
   - `codex-instructions.md` (Codex CLI instructions from GitHub)
   - `codex-instructions-meta.json` (ETag + release tag for Codex instructions)
-  - `opencode-codex.txt` (OpenCode system prompt from GitHub, for verification)
-  - `opencode-codex-meta.json` (ETag for OpenCode prompt)
-- **Debug logs**: `~/.opencode/logs/codex-plugin/` (when `ENABLE_PLUGIN_REQUEST_LOGGING=1`)
+  - `claw-codex.txt` (Claw system prompt from GitHub, for verification)
+  - `claw-codex-meta.json` (ETag for Claw prompt)
+- **Debug logs**: `~/.claw/logs/codex-plugin/` (when `ENABLE_PLUGIN_REQUEST_LOGGING=1`)
 - **OAuth callback**: `http://localhost:1455/auth/callback`
 
 ## Environment Variables
@@ -203,7 +203,7 @@ This plugin **intentionally differs from opencode defaults** because it accesses
 - `@openauthjs/openauth` (OAuth PKCE implementation)
 
 **Development**:
-- `@opencode-ai/plugin` (peer dependency)
+- `@claw-ai/plugin` (peer dependency)
 - `vitest` (testing framework)
 - TypeScript
 

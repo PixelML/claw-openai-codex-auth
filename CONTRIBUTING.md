@@ -1,6 +1,6 @@
 # Contributing Guidelines
 
-Thank you for your interest in contributing to opencode-openai-codex-auth!
+Thank you for your interest in contributing to claw-openai-codex-auth!
 
 Before submitting contributions, please review these guidelines to ensure all changes maintain compliance with OpenAI's Terms of Service and the project's goals.
 
@@ -57,7 +57,7 @@ When reporting issues, please:
 
 - **Check existing issues** to avoid duplicates
 - **Provide clear reproduction steps**
-- **Include version information** (`opencode --version`, plugin version)
+- **Include version information** (`claw --version`, plugin version)
 - **Confirm compliance:** Verify you're using the plugin for personal use with your own subscription
 - **Attach logs** (if using `ENABLE_PLUGIN_REQUEST_LOGGING=1`)
 
@@ -80,7 +80,7 @@ Please include:
 [What actually happens]
 
 **Environment:**
-- opencode version:
+- claw version:
 - Plugin version:
 - OS:
 - Node version:

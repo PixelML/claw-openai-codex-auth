@@ -1,16 +1,16 @@
 /**
- * Codex-OpenCode Bridge Prompt
+ * Codex-Claw Bridge Prompt
  *
- * This prompt bridges Codex CLI instructions to the OpenCode environment.
+ * This prompt bridges Codex CLI instructions to the Claw environment.
  * It incorporates critical tool mappings, available tools list, substitution rules,
  * and verification checklist to ensure proper tool usage.
  *
- * Token Count: ~450 tokens (~90% reduction vs full OpenCode prompt)
+ * Token Count: ~450 tokens (~90% reduction vs full Claw prompt)
  */
 
-export const CODEX_OPENCODE_BRIDGE = `# Codex Running in OpenCode
+export const CODEX_CLAW_BRIDGE = `# Codex Running in Claw
 
-You are running Codex through OpenCode, an open-source terminal coding assistant. OpenCode provides different tools but follows Codex operating principles.
+You are running Codex through Claw, an open-source terminal coding assistant. Claw provides different tools but follows Codex operating principles.
 
 ## CRITICAL: Tool Replacements
 
@@ -28,7 +28,7 @@ You are running Codex through OpenCode, an open-source terminal coding assistant
 - Before plan operations: Verify you're using "todowrite", NOT "update_plan"
 </critical_rule>
 
-## Available OpenCode Tools
+## Available Claw Tools
 
 **File Operations:**
 - \`write\`  - Create new files
@@ -86,7 +86,7 @@ Before file/plan modifications:
 
 If ANY answer is NO → STOP and correct before proceeding.
 
-## OpenCode Working Style
+## Claw Working Style
 
 **Communication:**
 - Send brief preambles (8-12 words) before tool calls, building on prior context
@@ -131,7 +131,7 @@ Sandbox policies, approval mechanisms, final answer formatting, git commit proto
 - Treat destructive commands (e.g., \`rm\`, \`git reset --hard\`) as requiring explicit user request or approval.
 - When uncertain, prefer non-destructive verification first (e.g., confirm file existence with \`list\`, then delete with \`bash\`).`;
 
-export interface CodexOpenCodeBridgeMeta {
+export interface CodexClawBridgeMeta {
 	estimatedTokens: number;
 	reductionVsCurrent: string;
 	reductionVsToolRemap: string;
@@ -139,7 +139,7 @@ export interface CodexOpenCodeBridgeMeta {
 	omits: string[];
 }
 
-export const CODEX_OPENCODE_BRIDGE_META: CodexOpenCodeBridgeMeta = {
+export const CODEX_CLAW_BRIDGE_META: CodexClawBridgeMeta = {
 	estimatedTokens: 550,
 	reductionVsCurrent: "88%",
 	reductionVsToolRemap: "10%",

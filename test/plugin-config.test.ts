@@ -41,7 +41,7 @@ describe('Plugin Configuration', () => {
 
 			expect(config).toEqual({ codexMode: true });
 			expect(mockExistsSync).toHaveBeenCalledWith(
-				path.join(os.homedir(), '.opencode', 'openai-codex-auth-config.json')
+				path.join(os.homedir(), '.claw', 'openai-codex-auth-config.json')
 			);
 		});
 

@@ -6,7 +6,7 @@ import { PLUGIN_NAME } from "./constants.js";
 // Logging configuration
 export const LOGGING_ENABLED = process.env.ENABLE_PLUGIN_REQUEST_LOGGING === "1";
 export const DEBUG_ENABLED = process.env.DEBUG_CODEX_PLUGIN === "1" || LOGGING_ENABLED;
-const LOG_DIR = join(homedir(), ".opencode", "logs", "codex-plugin");
+const LOG_DIR = join(homedir(), ".claw", "logs", "codex-plugin");
 
 // Log startup message about logging state
 if (LOGGING_ENABLED) {

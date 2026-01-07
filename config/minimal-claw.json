@@ -1,6 +1,6 @@
 {
-  "$schema": "https://opencode.ai/config.json",
-  "plugin": ["opencode-openai-codex-auth"],
+  "$schema": "https://claw.anthropic.com/config.json",
+  "plugin": ["claw-openai-codex-auth"],
   "provider": {
     "openai": {
       "options": {

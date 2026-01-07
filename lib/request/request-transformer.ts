@@ -1,10 +1,10 @@
 import { logDebug, logWarn } from "../logger.js";
 import { TOOL_REMAP_MESSAGE } from "../prompts/codex.js";
-import { CODEX_OPENCODE_BRIDGE } from "../prompts/codex-opencode-bridge.js";
-import { getOpenCodeCodexPrompt } from "../prompts/opencode-codex.js";
+import { CODEX_CLAW_BRIDGE } from "../prompts/codex-claw-bridge.js";
+import { getClawCodexPrompt } from "../prompts/claw-codex.js";
 import { getNormalizedModel } from "./helpers/model-map.js";
 import {
-	filterOpenCodeSystemPromptsWithCachedPrompt,
+	filterClawSystemPromptsWithCachedPrompt,
 	normalizeOrphanedToolOutputs,
 } from "./helpers/input-utils.js";
 import type {
@@ -16,8 +16,8 @@ import type {
 } from "../types.js";
 
 export {
-	isOpenCodeSystemPrompt,
-	filterOpenCodeSystemPromptsWithCachedPrompt,
+	isClawSystemPrompt,
+	filterClawSystemPromptsWithCachedPrompt,
 } from "./helpers/input-utils.js";
 
 /**
@@ -180,9 +180,9 @@ function resolveInclude(modelConfig: ConfigOptions, body: RequestBody): string[]
 /**
  * Configure reasoning parameters based on model variant and user config
  *
- * NOTE: This plugin follows Codex CLI defaults instead of opencode defaults because:
+ * NOTE: This plugin follows Codex CLI defaults instead of claw defaults because:
  * - We're accessing the ChatGPT backend API (not OpenAI Platform API)
- * - opencode explicitly excludes gpt-5-codex from automatic reasoning configuration
+ * - claw explicitly excludes gpt-5-codex from automatic reasoning configuration
  * - Codex CLI has been thoroughly tested against this backend
  *
  * @param originalModel - Original model name before normalization
@@ -304,7 +304,7 @@ export function getReasoningConfig(
  * - Full message history (without IDs)
  * - reasoning.encrypted_content (for reasoning continuity)
  *
- * @param input - Original input array from OpenCode/AI SDK
+ * @param input - Original input array from Claw/AI SDK
  * @returns Filtered input array compatible with Codex API
  */
 export function filterInput(
@@ -331,30 +331,30 @@ export function filterInput(
 }
 
 /**
- * Filter out OpenCode system prompts from input
- * Used in CODEX_MODE to replace OpenCode prompts with Codex-OpenCode bridge
+ * Filter out Claw system prompts from input
+ * Used in CODEX_MODE to replace Claw prompts with Codex-Claw bridge
  * @param input - Input array
- * @returns Input array without OpenCode system prompts
+ * @returns Input array without Claw system prompts
  */
-export async function filterOpenCodeSystemPrompts(
+export async function filterClawSystemPrompts(
 	input: InputItem[] | undefined,
 ): Promise<InputItem[] | undefined> {
 	if (!Array.isArray(input)) return input;
 
-	// Fetch cached OpenCode prompt for verification
+	// Fetch cached Claw prompt for verification
 	let cachedPrompt: string | null = null;
 	try {
-		cachedPrompt = await getOpenCodeCodexPrompt();
+		cachedPrompt = await getClawCodexPrompt();
 	} catch {
 		// If fetch fails, fallback to text-based detection only
 		// This is safe because we still have the "starts with" check
 	}
 
-	return filterOpenCodeSystemPromptsWithCachedPrompt(input, cachedPrompt);
+	return filterClawSystemPromptsWithCachedPrompt(input, cachedPrompt);
 }
 
 /**
- * Add Codex-OpenCode bridge message to input if tools are present
+ * Add Codex-Claw bridge message to input if tools are present
  * @param input - Input array
  * @param hasTools - Whether tools are present in request
  * @returns Input array with bridge message prepended if needed
@@ -371,7 +371,7 @@ export function addCodexBridgeMessage(
 		content: [
 			{
 				type: "input_text",
-				text: CODEX_OPENCODE_BRIDGE,
+				text: CODEX_CLAW_BRIDGE,
 			},
 		],
 	};
@@ -408,9 +408,9 @@ export function addToolRemapMessage(
 /**
  * Transform request body for Codex API
  *
- * NOTE: Configuration follows Codex CLI patterns instead of opencode defaults:
- * - opencode sets textVerbosity="low" for gpt-5, but Codex CLI uses "medium"
- * - opencode excludes gpt-5-codex from reasoning configuration
+ * NOTE: Configuration follows Codex CLI patterns instead of claw defaults:
+ * - claw sets textVerbosity="low" for gpt-5, but Codex CLI uses "medium"
+ * - claw excludes gpt-5-codex from reasoning configuration
  * - This plugin uses store=false (stateless), requiring encrypted reasoning content
  *
  * @param body - Original request body
@@ -484,8 +484,8 @@ export async function transformRequestBody(
 		}
 
 		if (codexMode) {
-			// CODEX_MODE: Remove OpenCode system prompt, add bridge prompt
-			body.input = await filterOpenCodeSystemPrompts(body.input);
+			// CODEX_MODE: Remove Claw system prompt, add bridge prompt
+			body.input = await filterClawSystemPrompts(body.input);
 			body.input = addCodexBridgeMessage(body.input, !!body.tools);
 		} else {
 			// DEFAULT MODE: Keep original behavior with tool remap message

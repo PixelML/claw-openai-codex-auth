@@ -1,7 +1,7 @@
 {
-  "name": "opencode-openai-codex-auth",
+  "name": "claw-openai-codex-auth",
   "version": "4.3.0",
-  "description": "OpenAI ChatGPT (Codex backend) OAuth auth plugin for opencode - use your ChatGPT Plus/Pro subscription instead of API credits",
+  "description": "OpenAI ChatGPT (Codex backend) OAuth auth plugin for claw - use your ChatGPT Plus/Pro subscription instead of API credits",
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
   "type": "module",
@@ -9,10 +9,10 @@
   "author": "Numman Ali",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/numman-ali/opencode-openai-codex-auth.git"
+    "url": "git+https://github.com/anthropics/claw-openai-codex-auth.git"
   },
   "keywords": [
-    "opencode",
+    "claw",
     "openai",
     "codex",
     "chatgpt",
@@ -23,9 +23,9 @@
     "chatgpt-plus",
     "chatgpt-pro"
   ],
-  "homepage": "https://github.com/numman-ali/opencode-openai-codex-auth#readme",
+  "homepage": "https://github.com/anthropics/claw-openai-codex-auth#readme",
   "bugs": {
-    "url": "https://github.com/numman-ali/opencode-openai-codex-auth/issues"
+    "url": "https://github.com/anthropics/claw-openai-codex-auth/issues"
   },
   "scripts": {
     "build": "tsc && cp lib/oauth-success.html dist/lib/",
@@ -36,7 +36,7 @@
     "test:coverage": "vitest run --coverage"
   },
   "bin": {
-    "opencode-openai-codex-auth": "./scripts/install-opencode-codex-auth.js"
+    "claw-openai-codex-auth": "./scripts/install-claw-codex-auth.js"
   },
   "files": [
     "dist/",

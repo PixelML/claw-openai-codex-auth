@@ -1,22 +1,22 @@
-![Image 1: opencode-openai-codex-auth](assets/readme-hero.svg)
-  
-  
+![Image 1: claw-openai-codex-auth](assets/readme-hero.svg)
+
+
 **Curated by [Numman Ali](https://x.com/nummanali)**
 [![Twitter Follow](https://img.shields.io/twitter/follow/nummanali?style=social)](https://x.com/nummanali)
-[![npm version](https://img.shields.io/npm/v/opencode-openai-codex-auth.svg)](https://www.npmjs.com/package/opencode-openai-codex-auth)
-[![Tests](https://github.com/numman-ali/opencode-openai-codex-auth/actions/workflows/ci.yml/badge.svg)](https://github.com/numman-ali/opencode-openai-codex-auth/actions)
-[![npm downloads](https://img.shields.io/npm/dm/opencode-openai-codex-auth.svg)](https://www.npmjs.com/package/opencode-openai-codex-auth)
+[![npm version](https://img.shields.io/npm/v/claw-openai-codex-auth.svg)](https://www.npmjs.com/package/claw-openai-codex-auth)
+[![Tests](https://github.com/anthropics/claw-openai-codex-auth/actions/workflows/ci.yml/badge.svg)](https://github.com/anthropics/claw-openai-codex-auth/actions)
+[![npm downloads](https://img.shields.io/npm/dm/claw-openai-codex-auth.svg)](https://www.npmjs.com/package/claw-openai-codex-auth)
 **One install. Every Codex model.**
 [Install](#-quick-start) · [Models](#-models) · [Configuration](#-configuration) · [Docs](#-docs)
 
 ---
 ## 💡 Philosophy
 > **"One config. Every model."**
-OpenCode should feel effortless. This plugin keeps the setup minimal while giving you full GPT‑5.x + Codex access via ChatGPT OAuth.
+Claw should feel effortless. This plugin keeps the setup minimal while giving you full GPT‑5.x + Codex access via ChatGPT OAuth.
 ```
 ┌─────────────────────────────────────────────────────────┐
 │                                                         │
-│  ChatGPT OAuth → Codex backend → OpenCode               │
+│  ChatGPT OAuth → Codex backend → Claw                   │
 │  One command install, full model presets, done.         │
 │                                                         │
 └─────────────────────────────────────────────────────────┘
@@ -24,17 +24,17 @@ OpenCode should feel effortless. This plugin keeps the setup minimal while givin
 ---
 ## 🚀 Quick Start
 ```bash
-npx -y opencode-openai-codex-auth@latest
+npx -y claw-openai-codex-auth@latest
 ```
 Then:
 ```bash
-opencode auth login
-opencode run "write hello world to test.txt" --model=openai/gpt-5.2 --variant=medium
+claw auth login
+claw run "write hello world to test.txt" --model=openai/gpt-5.2 --variant=medium
 ```
-Legacy OpenCode (v1.0.209 and below):
+Legacy Claw (v1.0.209 and below):
 ```bash
-npx -y opencode-openai-codex-auth@latest --legacy
-opencode run "write hello world to test.txt" --model=openai/gpt-5.2-medium
+npx -y claw-openai-codex-auth@latest --legacy
+claw run "write hello world to test.txt" --model=openai/gpt-5.2-medium
 ```
 ---
 ## 📦 Models
@@ -46,8 +46,8 @@ opencode run "write hello world to test.txt" --model=openai/gpt-5.2-medium
 - **gpt-5.1** (none/low/medium/high)
 ---
 ## 🧩 Configuration
-- Modern (OpenCode v1.0.210+): `config/opencode-modern.json`
-- Legacy (OpenCode v1.0.209 and below): `config/opencode-legacy.json`
+- Modern (Claw v1.0.210+): `config/claw-modern.json`
+- Legacy (Claw v1.0.209 and below): `config/claw-legacy.json`
 
 Minimal configs are not supported for GPT‑5.x; use the full configs above.
 ---

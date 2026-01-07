@@ -3,7 +3,7 @@ import { join } from "node:path";
 import { homedir } from "node:os";
 import type { PluginConfig } from "./types.js";
 
-const CONFIG_PATH = join(homedir(), ".opencode", "openai-codex-auth-config.json");
+const CONFIG_PATH = join(homedir(), ".claw", "openai-codex-auth-config.json");
 
 /**
  * Default plugin configuration
@@ -14,7 +14,7 @@ const DEFAULT_CONFIG: PluginConfig = {
 };
 
 /**
- * Load plugin configuration from ~/.opencode/openai-codex-auth-config.json
+ * Load plugin configuration from ~/.claw/openai-codex-auth-config.json
  * Falls back to defaults if file doesn't exist or is invalid
  *
  * @returns Plugin configuration

@@ -4,7 +4,7 @@ pnpm-lock.yaml
 dist/
 .DS_Store
 .history/
-opencode.json
-.opencode/
+claw.json
+.claw/
 tmp
 .codex-cache

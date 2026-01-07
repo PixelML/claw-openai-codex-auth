@@ -4,14 +4,14 @@ import {
     getModelConfig,
     filterInput,
     addToolRemapMessage,
-    isOpenCodeSystemPrompt,
-    filterOpenCodeSystemPrompts,
-    filterOpenCodeSystemPromptsWithCachedPrompt,
+    isClawSystemPrompt,
+    filterClawSystemPrompts,
+    filterClawSystemPromptsWithCachedPrompt,
     addCodexBridgeMessage,
     transformRequestBody,
 } from '../lib/request/request-transformer.js';
 import { TOOL_REMAP_MESSAGE } from '../lib/prompts/codex.js';
-import { CODEX_OPENCODE_BRIDGE } from '../lib/prompts/codex-opencode-bridge.js';
+import { CODEX_CLAW_BRIDGE } from '../lib/prompts/codex-claw-bridge.js';
 import type { RequestBody, UserConfig, InputItem } from '../lib/types.js';
 
 describe('Request Transformer Module', () => {
@@ -374,46 +374,46 @@ describe('Request Transformer Module', () => {
 		});
 	});
 
-	describe('isOpenCodeSystemPrompt', () => {
-		it('should detect OpenCode system prompt with string content', async () => {
+	describe('isClawSystemPrompt', () => {
+		it('should detect Claw system prompt with string content', async () => {
 			const item: InputItem = {
 				type: 'message',
 				role: 'developer',
-				content: 'You are a coding agent running in the opencode, a terminal-based coding assistant.',
+				content: 'You are a coding agent running in the claw, a terminal-based coding assistant.',
 			};
-			expect(isOpenCodeSystemPrompt(item, null)).toBe(true);
+			expect(isClawSystemPrompt(item, null)).toBe(true);
 		});
 
-		it('should detect OpenCode system prompt with array content', async () => {
+		it('should detect Claw system prompt with array content', async () => {
 			const item: InputItem = {
 				type: 'message',
 				role: 'developer',
 				content: [
 					{
 						type: 'input_text',
-						text: 'You are a coding agent running in the opencode, a terminal-based coding assistant.',
+						text: 'You are a coding agent running in the claw, a terminal-based coding assistant.',
 					},
 				],
 			};
-			expect(isOpenCodeSystemPrompt(item, null)).toBe(true);
+			expect(isClawSystemPrompt(item, null)).toBe(true);
 		});
 
 		it('should detect with system role', async () => {
 			const item: InputItem = {
 				type: 'message',
 				role: 'system',
-				content: 'You are a coding agent running in the opencode, a terminal-based coding assistant.',
+				content: 'You are a coding agent running in the claw, a terminal-based coding assistant.',
 			};
-			expect(isOpenCodeSystemPrompt(item, null)).toBe(true);
+			expect(isClawSystemPrompt(item, null)).toBe(true);
 		});
 
 		it('should not detect non-system roles', async () => {
 			const item: InputItem = {
 				type: 'message',
 				role: 'user',
-				content: 'You are a coding agent running in the opencode, a terminal-based coding assistant.',
+				content: 'You are a coding agent running in the claw, a terminal-based coding assistant.',
 			};
-			expect(isOpenCodeSystemPrompt(item, null)).toBe(false);
+			expect(isClawSystemPrompt(item, null)).toBe(false);
 		});
 
 		it('should not detect different content', async () => {
@@ -422,7 +422,7 @@ describe('Request Transformer Module', () => {
 				role: 'developer',
 				content: 'Different message',
 			};
-			expect(isOpenCodeSystemPrompt(item, null)).toBe(false);
+			expect(isClawSystemPrompt(item, null)).toBe(false);
 		});
 
 		it('should NOT detect AGENTS.md content', async () => {
@@ -431,7 +431,7 @@ describe('Request Transformer Module', () => {
 				role: 'developer',
 				content: '# Project Guidelines\n\nThis is custom AGENTS.md content for the project.',
 			};
-			expect(isOpenCodeSystemPrompt(item, null)).toBe(false);
+			expect(isClawSystemPrompt(item, null)).toBe(false);
 		});
 
 		it('should NOT detect environment info concatenated with AGENTS.md', async () => {
@@ -440,52 +440,52 @@ describe('Request Transformer Module', () => {
 				role: 'developer',
 				content: 'Environment: /path/to/project\nDate: 2025-01-01\n\n# AGENTS.md\n\nCustom instructions here.',
 			};
-			expect(isOpenCodeSystemPrompt(item, null)).toBe(false);
+			expect(isClawSystemPrompt(item, null)).toBe(false);
 		});
 
 		it('should NOT detect content with codex signature in the middle', async () => {
-			const cachedPrompt = 'You are a coding agent running in the opencode.';
+			const cachedPrompt = 'You are a coding agent running in the claw.';
 			const item: InputItem = {
 				type: 'message',
 				role: 'developer',
-				// Has codex.txt content but with environment prepended (like OpenCode does)
-				content: 'Environment info here\n\nYou are a coding agent running in the opencode.',
+				// Has codex.txt content but with environment prepended (like Claw does)
+				content: 'Environment info here\n\nYou are a coding agent running in the claw.',
 			};
 			// First 200 chars won't match because of prepended content
-			expect(isOpenCodeSystemPrompt(item, cachedPrompt)).toBe(false);
+			expect(isClawSystemPrompt(item, cachedPrompt)).toBe(false);
 		});
 
 		it('should detect with cached prompt exact match', async () => {
-			const cachedPrompt = 'You are a coding agent running in the opencode';
+			const cachedPrompt = 'You are a coding agent running in the claw';
 			const item: InputItem = {
 				type: 'message',
 				role: 'developer',
-				content: 'You are a coding agent running in the opencode',
+				content: 'You are a coding agent running in the claw',
 			};
-			expect(isOpenCodeSystemPrompt(item, cachedPrompt)).toBe(true);
+			expect(isClawSystemPrompt(item, cachedPrompt)).toBe(true);
 		});
 
-		it('should detect alternative OpenCode prompt signatures', async () => {
+		it('should detect alternative Claw prompt signatures', async () => {
 			const item: InputItem = {
 				type: 'message',
 				role: 'developer',
-				content: "You are opencode, an agent - please keep going until the user's query is completely resolved.",
+				content: "You are claw, an agent - please keep going until the user's query is completely resolved.",
 			};
-			expect(isOpenCodeSystemPrompt(item, null)).toBe(true);
+			expect(isClawSystemPrompt(item, null)).toBe(true);
 		});
 	});
 
-	describe('filterOpenCodeSystemPrompts', () => {
-		it('should filter out OpenCode system prompts', async () => {
+	describe('filterClawSystemPrompts', () => {
+		it('should filter out Claw system prompts', async () => {
 			const input: InputItem[] = [
 				{
 					type: 'message',
 					role: 'developer',
-					content: 'You are a coding agent running in the opencode',
+					content: 'You are a coding agent running in the claw',
 				},
 				{ type: 'message', role: 'user', content: 'hello' },
 			];
-			const result = filterOpenCodeSystemPromptsWithCachedPrompt(input, null);
+			const result = filterClawSystemPromptsWithCachedPrompt(input, null);
 			expect(result).toHaveLength(1);
 			expect(result![0].role).toBe('user');
 		});
@@ -495,16 +495,16 @@ describe('Request Transformer Module', () => {
 				{ type: 'message', role: 'user', content: 'message 1' },
 				{ type: 'message', role: 'user', content: 'message 2' },
 			];
-			const result = filterOpenCodeSystemPromptsWithCachedPrompt(input, null);
+			const result = filterClawSystemPromptsWithCachedPrompt(input, null);
 			expect(result).toHaveLength(2);
 		});
 
-		it('should keep non-OpenCode developer messages', async () => {
+		it('should keep non-Claw developer messages', async () => {
 			const input: InputItem[] = [
 				{ type: 'message', role: 'developer', content: 'Custom instruction' },
 				{ type: 'message', role: 'user', content: 'hello' },
 			];
-			const result = filterOpenCodeSystemPromptsWithCachedPrompt(input, null);
+			const result = filterClawSystemPromptsWithCachedPrompt(input, null);
 			expect(result).toHaveLength(2);
 		});
 
@@ -513,7 +513,7 @@ describe('Request Transformer Module', () => {
 				{
 					type: 'message',
 					role: 'developer',
-					content: 'You are a coding agent running in the opencode', // This is codex.txt
+					content: 'You are a coding agent running in the claw', // This is codex.txt
 				},
 				{
 					type: 'message',
@@ -522,20 +522,20 @@ describe('Request Transformer Module', () => {
 				},
 				{ type: 'message', role: 'user', content: 'hello' },
 			];
-			const result = filterOpenCodeSystemPromptsWithCachedPrompt(input, null);
+			const result = filterClawSystemPromptsWithCachedPrompt(input, null);
 			// Should filter codex.txt but keep AGENTS.md
 			expect(result).toHaveLength(2);
 			expect(result![0].content).toContain('AGENTS.md');
 			expect(result![1].role).toBe('user');
 		});
 
-		it('should strip OpenCode prompt but keep concatenated env/instructions', async () => {
+		it('should strip Claw prompt but keep concatenated env/instructions', async () => {
 			const input: InputItem[] = [
 				{
 					type: 'message',
 					role: 'developer',
 					content: [
-						'You are a coding agent running in the opencode, a terminal-based coding assistant.',
+						'You are a coding agent running in the claw, a terminal-based coding assistant.',
 						'Here is some useful information about the environment you are running in:',
 						'<env>',
 						'  Working directory: /path/to/project',
@@ -546,12 +546,12 @@ describe('Request Transformer Module', () => {
 				},
 				{ type: 'message', role: 'user', content: 'hello' },
 			];
-			const result = filterOpenCodeSystemPromptsWithCachedPrompt(input, null);
+			const result = filterClawSystemPromptsWithCachedPrompt(input, null);
 			expect(result).toHaveLength(2);
 			const preserved = String(result![0].content);
 			expect(preserved).toContain('Here is some useful information about the environment');
 			expect(preserved).toContain('Instructions from: /path/to/AGENTS.md');
-			expect(preserved).not.toContain('You are a coding agent running in the opencode');
+			expect(preserved).not.toContain('You are a coding agent running in the claw');
 		});
 
 		it('should keep environment+AGENTS.md concatenated message', async () => {
@@ -559,17 +559,17 @@ describe('Request Transformer Module', () => {
 				{
 					type: 'message',
 					role: 'developer',
-					content: 'You are a coding agent running in the opencode', // codex.txt alone
+					content: 'You are a coding agent running in the claw', // codex.txt alone
 				},
 				{
 					type: 'message',
 					role: 'developer',
-					// environment + AGENTS.md joined (like OpenCode does)
+					// environment + AGENTS.md joined (like Claw does)
 					content: 'Working directory: /path/to/project\nDate: 2025-01-01\n\n# AGENTS.md\n\nCustom instructions.',
 				},
 				{ type: 'message', role: 'user', content: 'hello' },
 			];
-			const result = filterOpenCodeSystemPromptsWithCachedPrompt(input, null);
+			const result = filterClawSystemPromptsWithCachedPrompt(input, null);
 			// Should filter first message (codex.txt) but keep second (env+AGENTS.md)
 			expect(result).toHaveLength(2);
 			expect(result![0].content).toContain('AGENTS.md');
@@ -577,7 +577,7 @@ describe('Request Transformer Module', () => {
 		});
 
 		it('should return undefined for undefined input', async () => {
-			expect(await filterOpenCodeSystemPrompts(undefined)).toBeUndefined();
+			expect(await filterClawSystemPrompts(undefined)).toBeUndefined();
 		});
 	});
 
@@ -591,7 +591,7 @@ describe('Request Transformer Module', () => {
 			expect(result).toHaveLength(2);
 			expect(result![0].role).toBe('developer');
 			expect(result![0].type).toBe('message');
-			expect((result![0].content as any)[0].text).toContain('Codex Running in OpenCode');
+			expect((result![0].content as any)[0].text).toContain('Codex Running in Claw');
 		});
 
 		it('should not modify input when tools not present', async () => {
@@ -610,11 +610,11 @@ describe('Request Transformer Module', () => {
 		describe('transformRequestBody', () => {
 			const codexInstructions = 'Test Codex Instructions';
 
-			it('preserves existing prompt_cache_key passed by host (OpenCode)', async () => {
+			it('preserves existing prompt_cache_key passed by host (Claw)', async () => {
 				const body: RequestBody = {
 					model: 'gpt-5-codex',
 					input: [],
-					// Host-provided key (OpenCode session id)
+					// Host-provided key (Claw session id)
 					// @ts-expect-error extra field allowed
 					prompt_cache_key: 'ses_host_key_123',
 				};
@@ -1189,14 +1189,14 @@ describe('Request Transformer Module', () => {
 				expect((result.input![0].content as any)[0].text).toContain('Codex Running in OpenCode');
 			});
 
-			it('should filter OpenCode prompts when codexMode=true', async () => {
+			it('should filter Claw prompts when codexMode=true', async () => {
 				const body: RequestBody = {
 					model: 'gpt-5',
 					input: [
 						{
 							type: 'message',
 							role: 'developer',
-							content: 'You are a coding agent running in the opencode',
+							content: 'You are a coding agent running in the claw',
 						},
 						{ type: 'message', role: 'user', content: 'hello' },
 					],
@@ -1204,7 +1204,7 @@ describe('Request Transformer Module', () => {
 				};
 				const result = await transformRequestBody(body, codexInstructions, undefined, true);
 
-				// Should have bridge message + user message (OpenCode prompt filtered out)
+				// Should have bridge message + user message (Claw prompt filtered out)
 				expect(result.input).toHaveLength(2);
 				expect(result.input![0].role).toBe('developer');
 				expect((result.input![0].content as any)[0].text).toContain('Codex Running in OpenCode');
@@ -1235,14 +1235,14 @@ describe('Request Transformer Module', () => {
 				expect((result.input![0].content as any)[0].text).toContain('apply_patch');
 			});
 
-			it('should not filter OpenCode prompts when codexMode=false', async () => {
+			it('should not filter Claw prompts when codexMode=false', async () => {
 				const body: RequestBody = {
 					model: 'gpt-5',
 					input: [
 						{
 							type: 'message',
 							role: 'developer',
-							content: 'You are a coding agent running in the opencode',
+							content: 'You are a coding agent running in the claw',
 						},
 						{ type: 'message', role: 'user', content: 'hello' },
 					],
@@ -1250,7 +1250,7 @@ describe('Request Transformer Module', () => {
 				};
 				const result = await transformRequestBody(body, codexInstructions, undefined, false);
 
-				// Should have tool remap + opencode prompt + user message
+				// Should have tool remap + claw prompt + user message
 				expect(result.input).toHaveLength(3);
 				expect(result.input![0].role).toBe('developer');
 				expect((result.input![0].content as any)[0].text).toContain('apply_patch');

@@ -8,7 +8,7 @@ const GITHUB_API_RELEASES =
 	"https://api.github.com/repos/openai/codex/releases/latest";
 const GITHUB_HTML_RELEASES =
 	"https://github.com/openai/codex/releases/latest";
-const CACHE_DIR = join(homedir(), ".opencode", "cache");
+const CACHE_DIR = join(homedir(), ".claw", "cache");
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);

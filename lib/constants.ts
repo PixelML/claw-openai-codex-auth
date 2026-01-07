@@ -12,7 +12,7 @@ export const CODEX_BASE_URL = "https://chatgpt.com/backend-api";
 /** Dummy API key used for OpenAI SDK (actual auth via OAuth) */
 export const DUMMY_API_KEY = "chatgpt-oauth";
 
-/** Provider ID for opencode configuration */
+/** Provider ID for claw configuration */
 export const PROVIDER_ID = "openai";
 
 /** HTTP Status Codes */

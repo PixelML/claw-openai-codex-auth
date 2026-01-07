@@ -3,8 +3,8 @@
  * These functions break down the complex fetch logic into manageable, testable units
  */
 
-import type { Auth } from "@opencode-ai/sdk";
-import type { OpencodeClient } from "@opencode-ai/sdk";
+import type { Auth } from "@anthropics/claw-sdk";
+import type { ClawClient } from "@anthropics/claw-sdk";
 import { refreshAccessToken } from "../auth/auth.js";
 import { logRequest } from "../logger.js";
 import { getCodexInstructions, getModelFamily } from "../prompts/codex.js";
@@ -33,12 +33,12 @@ export function shouldRefreshToken(auth: Auth): boolean {
 /**
  * Refreshes the OAuth token and updates stored credentials
  * @param currentAuth - Current auth state
- * @param client - Opencode client for updating stored credentials
+ * @param client - Claw client for updating stored credentials
  * @returns Updated auth (throws on failure)
  */
 export async function refreshAndUpdateToken(
 	currentAuth: Auth,
-	client: OpencodeClient,
+	client: ClawClient,
 ): Promise<Auth> {
 	const refreshToken = currentAuth.type === "oauth" ? currentAuth.refresh : "";
 	const refreshResult = await refreshAccessToken(refreshToken);

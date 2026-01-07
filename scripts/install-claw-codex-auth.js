@@ -6,21 +6,21 @@ import { fileURLToPath } from "node:url";
 import { dirname, join, resolve } from "node:path";
 import { homedir } from "node:os";
 
-const PLUGIN_NAME = "opencode-openai-codex-auth";
+const PLUGIN_NAME = "claw-openai-codex-auth";
 const args = new Set(process.argv.slice(2));
 
 if (args.has("--help") || args.has("-h")) {
 	console.log(`Usage: ${PLUGIN_NAME} [--modern|--legacy] [--dry-run] [--no-cache-clear]\n\n` +
 		"Default behavior:\n" +
-		"  - Installs/updates global config at ~/.config/opencode/opencode.json\n" +
+		"  - Installs/updates global config at ~/.config/claw/claw.json\n" +
 		"  - Uses modern config (variants) by default\n" +
 		"  - Ensures plugin is unpinned (latest)\n" +
-		"  - Clears OpenCode plugin cache\n\n" +
+		"  - Clears Claw plugin cache\n\n" +
 		"Options:\n" +
 		"  --modern           Force modern config (default)\n" +
-		"  --legacy           Use legacy config (older OpenCode versions)\n" +
+		"  --legacy           Use legacy config (older Claw versions)\n" +
 		"  --dry-run          Show actions without writing\n" +
-		"  --no-cache-clear   Skip clearing OpenCode cache\n"
+		"  --no-cache-clear   Skip clearing Claw cache\n"
 	);
 	process.exit(0);
 }
@@ -35,12 +35,12 @@ const repoRoot = resolve(scriptDir, "..");
 const templatePath = join(
 	repoRoot,
 	"config",
-	useLegacy ? "opencode-legacy.json" : "opencode-modern.json"
+	useLegacy ? "claw-legacy.json" : "claw-modern.json"
 );
 
-const configDir = join(homedir(), ".config", "opencode");
-const configPath = join(configDir, "opencode.json");
-const cacheDir = join(homedir(), ".cache", "opencode");
+const configDir = join(homedir(), ".config", "claw");
+const configPath = join(configDir, "claw.json");
+const cacheDir = join(homedir(), ".cache", "claw");
 const cacheNodeModules = join(cacheDir, "node_modules", PLUGIN_NAME);
 const cacheBunLock = join(cacheDir, "bun.lock");
 const cachePackageJson = join(cacheDir, "package.json");
@@ -179,10 +179,10 @@ async function main() {
 
 	await clearCache();
 
-	log("\nDone. Restart OpenCode to (re)install the plugin.");
-	log("Example: opencode");
+	log("\nDone. Restart Claw to (re)install the plugin.");
+	log("Example: claw");
 	if (useLegacy) {
-		log("Note: Legacy config requires OpenCode v1.0.209 or older.");
+		log("Note: Legacy config requires Claw v1.0.209 or older.");
 	}
 }
 

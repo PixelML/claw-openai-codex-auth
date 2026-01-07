@@ -1,5 +1,5 @@
 /**
- * OpenAI ChatGPT (Codex) OAuth Authentication Plugin for opencode
+ * OpenAI ChatGPT (Codex) OAuth Authentication Plugin for claw
  *
  * COMPLIANCE NOTICE:
  * This plugin uses OpenAI's official OAuth authentication flow (the same method
@@ -19,11 +19,11 @@
  *
  * @license MIT with Usage Disclaimer (see LICENSE file)
  * @author numman-ali
- * @repository https://github.com/numman-ali/opencode-openai-codex-auth
+ * @repository https://github.com/anthropics/claw-openai-codex-auth
  */
 
-import type { Plugin, PluginInput } from "@opencode-ai/plugin";
-import type { Auth } from "@opencode-ai/sdk";
+import type { Plugin, PluginInput } from "@anthropics/claw-plugin";
+import type { Auth } from "@anthropics/claw-sdk";
 import {
 	createAuthorizationFlow,
 	decodeJWT,
@@ -60,16 +60,16 @@ import {
 import type { UserConfig } from "./lib/types.js";
 
 /**
- * OpenAI Codex OAuth authentication plugin for opencode
+ * OpenAI Codex OAuth authentication plugin for claw
  *
- * This plugin enables opencode to use OpenAI's Codex backend via ChatGPT Plus/Pro
+ * This plugin enables claw to use OpenAI's Codex backend via ChatGPT Plus/Pro
  * OAuth authentication, allowing users to leverage their ChatGPT subscription
  * instead of OpenAI Platform API credits.
  *
  * @example
  * ```json
  * {
- *   "plugin": ["opencode-openai-codex-auth"],
+ *   "plugin": ["claw-openai-codex-auth"],
  *   "model": "openai/gpt-5-codex"
  * }
  * ```
@@ -101,7 +101,7 @@ export const OpenAIAuthPlugin: Plugin = async ({ client }: PluginInput) => {
 			 * This function:
 			 * 1. Validates OAuth authentication
 			 * 2. Extracts ChatGPT account ID from access token
-			 * 3. Loads user configuration from opencode.json
+			 * 3. Loads user configuration from claw.json
 			 * 4. Fetches Codex system instructions from GitHub (cached)
 			 * 5. Returns SDK configuration with custom fetch implementation
 			 *

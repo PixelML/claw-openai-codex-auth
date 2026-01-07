@@ -1,14 +1,14 @@
 import type { InputItem } from "../../types.js";
 
-const OPENCODE_PROMPT_SIGNATURES = [
-	"you are a coding agent running in the opencode",
-	"you are opencode, an agent",
-	"you are opencode, an interactive cli agent",
-	"you are opencode, an interactive cli tool",
-	"you are opencode, the best coding agent on the planet",
+const CLAW_PROMPT_SIGNATURES = [
+	"you are a coding agent running in the claw",
+	"you are claw, an agent",
+	"you are claw, an interactive cli agent",
+	"you are claw, an interactive cli tool",
+	"you are claw, the best coding agent on the planet",
 ].map((signature) => signature.toLowerCase());
 
-const OPENCODE_CONTEXT_MARKERS = [
+const CLAW_CONTEXT_MARKERS = [
 	"here is some useful information about the environment you are running in:",
 	"<env>",
 	"instructions from:",
@@ -41,11 +41,11 @@ const replaceContentText = (item: InputItem, contentText: string): InputItem => 
 	return { ...item, content: contentText };
 };
 
-const extractOpenCodeContext = (contentText: string): string | null => {
+const extractClawContext = (contentText: string): string | null => {
 	const lower = contentText.toLowerCase();
 	let earliestIndex = -1;
 
-	for (const marker of OPENCODE_CONTEXT_MARKERS) {
+	for (const marker of CLAW_CONTEXT_MARKERS) {
 		const index = lower.indexOf(marker);
 		if (index >= 0 && (earliestIndex === -1 || index < earliestIndex)) {
 			earliestIndex = index;
@@ -56,7 +56,7 @@ const extractOpenCodeContext = (contentText: string): string | null => {
 	return contentText.slice(earliestIndex).trimStart();
 };
 
-export function isOpenCodeSystemPrompt(
+export function isClawSystemPrompt(
 	item: InputItem,
 	cachedPrompt: string | null,
 ): boolean {
@@ -85,12 +85,12 @@ export function isOpenCodeSystemPrompt(
 	}
 
 	const normalized = contentText.trimStart().toLowerCase();
-	return OPENCODE_PROMPT_SIGNATURES.some((signature) =>
+	return CLAW_PROMPT_SIGNATURES.some((signature) =>
 		normalized.startsWith(signature),
 	);
 }
 
-export function filterOpenCodeSystemPromptsWithCachedPrompt(
+export function filterClawSystemPromptsWithCachedPrompt(
 	input: InputItem[] | undefined,
 	cachedPrompt: string | null,
 ): InputItem[] | undefined {
@@ -99,12 +99,12 @@ export function filterOpenCodeSystemPromptsWithCachedPrompt(
 	return input.flatMap((item) => {
 		if (item.role === "user") return [item];
 
-		if (!isOpenCodeSystemPrompt(item, cachedPrompt)) {
+		if (!isClawSystemPrompt(item, cachedPrompt)) {
 			return [item];
 		}
 
 		const contentText = getContentText(item);
-		const preservedContext = extractOpenCodeContext(contentText);
+		const preservedContext = extractClawContext(contentText);
 		if (preservedContext) {
 			return [replaceContentText(item, preservedContext)];
 		}

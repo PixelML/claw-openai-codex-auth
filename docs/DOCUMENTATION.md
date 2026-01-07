@@ -19,9 +19,9 @@ This document explains the organization of documentation in this repository.
 │       └── TESTING.md             # Test procedures
 ├── config/
 │   ├── README.md                  # Example configs guide
-│   ├── opencode-legacy.json       # Legacy full config example (v1.0.209 and below)
-│   ├── opencode-modern.json       # Variant config example (v1.0.210+)
-│   └── minimal-opencode.json      # Minimal config example
+│   ├── claw-legacy.json       # Legacy full config example (v1.0.209 and below)
+│   ├── claw-modern.json       # Variant config example (v1.0.210+)
+│   └── minimal-claw.json      # Minimal config example
 └── tmp/release-notes/             # Detailed release artifacts
     ├── CHANGES.md                 # Detailed v2.1.2 changes
     ├── BUGS_FIXED.md              # Bug analysis
@@ -50,7 +50,7 @@ This document explains the organization of documentation in this repository.
 
 Enable GitHub Pages in repository settings:
 - **Source**: `main` branch, `/docs` folder
-- **URL**: `https://your-username.github.io/opencode-codex-plugin/`
+- **URL**: `https://your-username.github.io/claw-codex-plugin/`
 
 The site automatically serves:
 - `docs/index.md` as homepage
